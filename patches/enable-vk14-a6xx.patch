@@ -1,7 +1,9 @@
+diff --git a/src/freedreno/vulkan/tu_device.cc b/src/freedreno/vulkan/tu_device.cc
+index e68c215..a0cead6 100644
 --- a/src/freedreno/vulkan/tu_device.cc
 +++ b/src/freedreno/vulkan/tu_device.cc
-@@ -1229,8 +1229,7 @@
-
+@@ -1229,8 +1229,7 @@ tu_get_properties(struct tu_physical_device *pdevice,
+ 
     props->apiVersion =
        tu_has_multiview(pdevice) ?
 -         ((pdevice->info->chip >= 7) ? TU_API_VERSION :

@@ -1,9 +1,12 @@
+diff --git a/src/freedreno/common/freedreno_devices.py b/src/freedreno/common/freedreno_devices.py
+index aa485dd..89f4cf4 100644
 --- a/src/freedreno/common/freedreno_devices.py
 +++ b/src/freedreno/common/freedreno_devices.py
-@@ -986,6 +986,44 @@ add_gpus([
+@@ -984,6 +984,47 @@ add_gpus([
          raw_magic_regs = a730_raw_magic_regs,
      ))
-
+ 
++
 +add_gpus([
 +        GPUId(chip_id=0x07010000, name="FD710"), # KGSL, no speedbin data
 +        GPUId(chip_id=0xffff07010000, name="FD710"), # Default no-speedbin fallback
