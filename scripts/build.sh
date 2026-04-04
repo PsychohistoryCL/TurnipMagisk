@@ -126,7 +126,7 @@ meson setup build-android-aarch64 \
     -Dvulkan-drivers=freedreno \
     -Dvulkan-beta=true \
     -Dfreedreno-kmds=kgsl \
-    -Db_lto=true \
+    -Db_lto=false \
     -Dstrip=true \
     -Degl=disabled \
     -Dandroid-libbacktrace=disabled \
