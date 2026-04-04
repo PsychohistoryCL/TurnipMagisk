@@ -39,8 +39,8 @@ echo "==> Cloning Mesa (shallow, branch: $MESA_BRANCH)..."
 git clone --depth 1 --branch "$MESA_BRANCH" "$MESA_REPO" mesa
 cd mesa
 
-# Extract Mesa version from meson.build
-MESA_VERSION=$(grep -oP "version\s*:\s*'\K[^']+" meson.build | head -1)
+# Extract Mesa version from VERSION file
+MESA_VERSION=$(cat VERSION)
 echo "  Mesa version: $MESA_VERSION"
 
 # ─── Download external patches ────────────────────────────────────────────────
@@ -51,15 +51,18 @@ curl -L "$A8XX_PATCH_URL" -o "$PATCHES_DIR/a8xx-kgsl.patch" || {
 
 # ─── Apply patches ────────────────────────────────────────────────────────────
 echo "==> Applying patches..."
-for patch in "$PATCHES_DIR"/*.patch; do
-    if [ -f "$patch" ]; then
-        echo "  Applying: $(basename "$patch")"
-        if git apply --check "$patch" 2>/dev/null; then
-            git apply "$patch"
-            echo "    OK"
+for patchfile in "$PATCHES_DIR"/*.patch; do
+    if [ -f "$patchfile" ]; then
+        PNAME="$(basename "$patchfile")"
+        echo "  Applying: $PNAME"
+        if git apply --check "$patchfile" 2>/dev/null; then
+            git apply "$patchfile"
+            echo "    OK (clean)"
+        elif patch -p1 --dry-run < "$patchfile" > /dev/null 2>&1; then
+            patch -p1 --fuzz=3 < "$patchfile"
+            echo "    OK (with fuzz)"
         else
-            echo "    WARNING: Patch did not apply cleanly, trying with fuzz..."
-            git apply --3way "$patch" || echo "    SKIPPED: $(basename "$patch") — may conflict with current Mesa"
+            echo "    SKIPPED: $PNAME — does not apply to current Mesa (upstream may have changed)"
         fi
     fi
 done

@@ -1,4 +1,4 @@
-name: Build Turnip Magisk Magisk Module
+name: Build Turnip Magisk Module
 
 on:
   workflow_dispatch:
@@ -21,9 +21,10 @@ jobs:
           sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list 2>/dev/null || true
           sudo apt-get update
           sudo apt-get build-dep mesa -y
-          sudo apt-get install -y ccache meson ninja-build patchelf unzip curl \
+          sudo apt-get install -y ccache ninja-build patchelf unzip curl \
             flex bison zip python3-pip python3-mako python3-yaml python3-ply \
             glslang-tools build-essential
+          pip install --break-system-packages meson>=1.4.0
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1
