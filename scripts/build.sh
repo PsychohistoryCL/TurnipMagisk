@@ -162,6 +162,7 @@ patchelf --set-soname vulkan.turnip.so "$WORK_DIR/vulkan.turnip.so"
 
 MODULE_DIR="$WORK_DIR/module"
 cp -r "$TEMPLATE_DIR" "$MODULE_DIR"
+mkdir -p "$MODULE_DIR/system/vendor/lib64/hw"
 cp "$WORK_DIR/vulkan.turnip.so" "$MODULE_DIR/system/vendor/lib64/hw/vulkan.turnip.so"
 
 sed -i "s|__MESA_VERSION__|${MESA_VERSION}|g" "$MODULE_DIR/module.prop"
