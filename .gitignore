@@ -1,0 +1,8 @@
+build/
+out/
+*.zip
+turnip_original/
+turnip_mrpurple/
+purple-turnip/
+freedreno-CI/
+mesa-src/

@@ -1,0 +1,6 @@
+id=turnip_magisk
+name=Turnip Magisk
+version=__MESA_VERSION__
+versionCode=__VERSION_CODE__
+author=N1GHT (Mesa/freedreno + Vulkan 1.4 A6xx patch)
+description=Turnip Vulkan driver with Vulkan 1.4 enabled for Adreno 6xx+. Tap action button to toggle Turnip / Adreno.

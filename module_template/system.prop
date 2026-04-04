@@ -1,0 +1,2 @@
+debug.hwui.renderer=skiagl
+ro.hardware.vulkan=turnip
