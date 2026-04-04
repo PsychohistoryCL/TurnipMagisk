@@ -183,7 +183,7 @@ ADPKG_DIR="$WORK_DIR/adrenotools"
 mkdir -p "$ADPKG_DIR"
 
 ADPKG_LIBNAME="vulkan.freedreno.so"
-cp "$BUILT_SO" "$ADPKG_DIR/$ADPKG_LIBNAME"
+cp "$WORK_DIR/vulkan.turnip.so" "$ADPKG_DIR/$ADPKG_LIBNAME"
 patchelf --set-soname "$ADPKG_LIBNAME" "$ADPKG_DIR/$ADPKG_LIBNAME"
 
 cat > "$ADPKG_DIR/meta.json" <<EOF
