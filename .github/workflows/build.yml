@@ -11,6 +11,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    env:
+      NDK_VERSION: android-ndk-r28
+      CCACHE_DIR: /home/runner/.cache/ccache
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,17 +30,35 @@ jobs:
             glslang-tools build-essential
           pip install --break-system-packages meson>=1.4.0
 
-      - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1
+      - name: Cache NDK
+        id: ndk-cache
+        uses: actions/cache@v4
         with:
-          key: mesa-turnip-${{ github.sha }}
-          restore-keys: mesa-turnip-
+          path: build/${{ env.NDK_VERSION }}
+          key: ndk-${{ env.NDK_VERSION }}
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-mesa-${{ github.run_id }}
+          restore-keys: ccache-mesa-
+
+      - name: Configure ccache
+        run: |
+          ccache --set-config=max_size=2G
+          ccache --set-config=compression=true
+          ccache -z
 
       - name: Build module
         id: build
         run: |
           chmod +x scripts/build.sh
           bash scripts/build.sh
+
+      - name: Print ccache stats
+        if: always()
+        run: ccache -s
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -91,7 +113,7 @@ jobs:
           - \`a8xx-kgsl.patch\` — Whitebelyash A8xx UBWC/KGSL support
 
           ### Build config
-          - NDK r28 | API 33 | LTO | stripped | vulkan-beta
+          - NDK r28 | API 33 | stripped | vulkan-beta
           - Tap **action button** in Magisk to toggle: Turnip ↔ Adreno (stock)
 
           *This release is updated automatically. Previous builds are replaced.*

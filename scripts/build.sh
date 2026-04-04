@@ -25,14 +25,20 @@ cd "$WORK_DIR"
 echo "==> Installing Python build dependencies..."
 pip install mako pyyaml ply --quiet
 
-# ─── Download NDK ─────────────────────────────────────────────────────────────
-echo "==> Downloading Android NDK ($NDK_VERSION)..."
-if [ ! -d "$WORK_DIR/$NDK_VERSION" ]; then
+# ─── Download NDK (skipped if cached) ─────────────────────────────────────────
+echo "==> Checking for Android NDK ($NDK_VERSION)..."
+if [ -d "$WORK_DIR/$NDK_VERSION" ]; then
+    echo "  NDK found in cache, skipping download"
+else
+    echo "  Downloading NDK (~689 MB)..."
     curl -L "$NDK_URL" -o ndk.zip
     unzip -q ndk.zip
     rm ndk.zip
 fi
 NDK_TOOLCHAIN="$WORK_DIR/$NDK_VERSION/toolchains/llvm/prebuilt/linux-x86_64/bin"
+
+# Ensure ccache is on PATH and wraps the compiler
+export PATH="/usr/lib/ccache:$PATH"
 
 # ─── Clone Mesa ───────────────────────────────────────────────────────────────
 echo "==> Cloning Mesa (shallow, branch: $MESA_BRANCH)..."
