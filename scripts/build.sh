@@ -4,7 +4,7 @@ set -euo pipefail
 # ─── Configuration ────────────────────────────────────────────────────────────
 NDK_VERSION="android-ndk-r28"
 NDK_URL="https://dl.google.com/android/repository/${NDK_VERSION}-linux.zip"
-MESA_REPO="https://gitlab.freedesktop.org/mesa/mesa.git"
+MESA_REPO="https://github.com/LFRon/Turnip-Enhanced.git"
 MESA_BRANCH="main"
 API_LEVEL=33
 A8XX_PATCH_URL="https://github.com/whitebelyash/mesa-tu8/releases/download/patchset-head-v2/tu8_kgsl.patch"

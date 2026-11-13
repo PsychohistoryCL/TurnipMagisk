@@ -1,9 +1,9 @@
 name: Build Turnip Magisk Module
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
-  schedule:
-    - cron: '0 6 * * 1'  # Weekly on Monday 06:00 UTC
 
 permissions:
   contents: write
@@ -74,50 +74,3 @@ jobs:
           path: |
             build/meson_log.txt
             build/ninja_log.txt
-
-      - name: Update nightly release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          MAGISK_ZIP="${{ steps.build.outputs.magisk_zip }}"
-          ADPKG_ZIP="${{ steps.build.outputs.adpkg_zip }}"
-          MESA_VER="${{ steps.build.outputs.mesa_version }}"
-          TAG="nightly"
-
-          # Delete existing nightly release if it exists
-          gh release delete "$TAG" --yes 2>/dev/null || true
-          git push origin --delete "$TAG" 2>/dev/null || true
-
-          gh release create "$TAG" \
-            --title "Nightly — Turnip Magisk v${MESA_VER}" \
-            --prerelease \
-            --notes "$(cat <<EOF
-          ## Turnip Magisk — Nightly Build
-
-          **Mesa version:** ${MESA_VER}
-          **Built:** $(date -u '+%Y-%m-%d %H:%M UTC')
-          **Vulkan:** 1.4 (enabled for all Adreno 6xx+) with beta extensions
-          **A8xx:** Supported via Whitebelyash KGSL patch
-          **Unsupported GPUs:** A710/A720 added via K11MCH1 patch
-          **Target:** Android 13+ (API 33)
-
-          ### Downloads
-          | File | Usage |
-          |------|-------|
-          | \`${MAGISK_ZIP}\` | Flash in Magisk / KernelSU / APatch |
-          | \`${ADPKG_ZIP}\` | Load in emulators (Yuzu, Vita3K, Eden) or Winlator |
-
-          ### Patches applied
-          - \`enable-vk14-a6xx.patch\` — Vulkan 1.4 for A6xx (removes chip >= 7 gate)
-          - \`unsup-gpus-a710-a720.patch\` — Adds Adreno 710/720 GPU definitions
-          - \`a8xx-kgsl.patch\` — Whitebelyash A8xx UBWC/KGSL support
-
-          ### Build config
-          - NDK r28 | API 33 | stripped | vulkan-beta
-          - Tap **action button** in Magisk to toggle: Turnip ↔ Adreno (stock)
-
-          *This release is updated automatically. Previous builds are replaced.*
-          EOF
-          )" \
-            "out/$MAGISK_ZIP" \
-            "out/$ADPKG_ZIP"
