@@ -49,12 +49,6 @@ cd mesa
 MESA_VERSION=$(cat VERSION)
 echo "  Mesa version: $MESA_VERSION"
 
-# ─── Download external patches ────────────────────────────────────────────────
-echo "==> Downloading Whitebelyash A8xx KGSL patch..."
-curl -L "$A8XX_PATCH_URL" -o "$PATCHES_DIR/a8xx-kgsl.patch" || {
-    echo "  WARNING: Could not download A8xx patch, skipping"
-}
-
 # ─── Apply patches ────────────────────────────────────────────────────────────
 echo "==> Applying patches..."
 for patchfile in "$PATCHES_DIR"/*.patch; do
